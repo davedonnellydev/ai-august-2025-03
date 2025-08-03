@@ -5,7 +5,7 @@
 **📆 Date**: 05/Aug/2025  
 **🎯 Project Objective**: Enter ingredients, get suggested recipes powered by AI.   
 **🚀 Features**: Enter or select ingredients; AI generates recipes; Display recipe cards. Stretch goals: Change amounts based on serving sizes; Toggle between Metric & Imperial; Export/Share recipes  
-**🛠️ Tech used**: Next.js, TypeScript, (https://spoonacular.com/food-api)[https://spoonacular.com/food-api]  
+**🛠️ Tech used**: Next.js, TypeScript, [https://spoonacular.com/food-api](https://spoonacular.com/food-api)  
 **▶️ Live Demo**: *[https://your-demo-url.com](https://your-demo-url.com)*  
 *(Link will be added after deployment)*  
 
