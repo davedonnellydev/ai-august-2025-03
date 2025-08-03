@@ -24,15 +24,15 @@ This project has been built as part of my AI August App-A-Day Challenge. You can
 
 ## 🧪 Testing
 
-![CI](https://github.com/davedonnellydev/ai-august-2025-03/actions/workflows/npm_test.yml/badge.svg) *[Link should be amended so that correct repo is specified]*  
+![CI](https://github.com/davedonnellydev/ai-august-2025-03/actions/workflows/npm_test.yml/badge.svg)  
 *Note: Test suite runs automatically with each push/merge.*  
 
 ## Quick Start
 
 1. **Clone and install:**
    ```bash
-   git clone https://github.com/davedonnellydev/nextjs-typescript-mantine-starter.git
-   cd nextjs-typescript-mantine-starter
+   git clone https://github.com/davedonnellydev/ai-august-2025-03.git
+   cd ai-august-2025-03
    npm install
    ```
 
