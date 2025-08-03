@@ -1,11 +1,11 @@
-# Project [00] #AIAugustAppADay: [Project name]
+# Project 03 #AIAugustAppADay: Smart Recipe Finder
 
-![Last Commit](https://img.shields.io/github/last-commit/davedonnellydev/nextjs-typescript-mantine-starter)  
+![Last Commit](https://img.shields.io/github/last-commit/davedonnellydev/ai-august-2025-03)  
 
-**📆 Date**: XX/Aug/2025  
-**🎯 Project Objective**: *[Write up any project objectives here]*   
-**🚀 Features**: *[Main features for MVP]*  
-**🛠️ Tech used**: *[Main tech used, including links to libraries/APIs]*  
+**📆 Date**: 05/Aug/2025  
+**🎯 Project Objective**: Enter ingredients, get suggested recipes powered by AI.   
+**🚀 Features**: Enter or select ingredients; AI generates recipes; Display recipe cards. Stretch goals: Change amounts based on serving sizes; Toggle between Metric & Imperial; Export/Share recipes  
+**🛠️ Tech used**: Next.js, TypeScript, (https://spoonacular.com/food-api)[https://spoonacular.com/food-api]  
 **▶️ Live Demo**: *[https://your-demo-url.com](https://your-demo-url.com)*  
 *(Link will be added after deployment)*  
 
@@ -24,7 +24,7 @@ This project has been built as part of my AI August App-A-Day Challenge. You can
 
 ## 🧪 Testing
 
-![CI](https://github.com/davedonnellydev/nextjs-typescript-mantine-starter/actions/workflows/npm_test.yml/badge.svg) *[Link should be amended so that correct repo is specified]*  
+![CI](https://github.com/davedonnellydev/ai-august-2025-03/actions/workflows/npm_test.yml/badge.svg) *[Link should be amended so that correct repo is specified]*  
 *Note: Test suite runs automatically with each push/merge.*  
 
 ## Quick Start
@@ -113,5 +113,5 @@ import { Component } from '@/components/Component';  // instead of '../../../com
 
 
 ## 📜 License
-![GitHub License](https://img.shields.io/github/license/davedonnellydev/nextjs-typescript-mantine-starter)  
+![GitHub License](https://img.shields.io/github/license/davedonnellydev/ai-august-2025-03)  
 This project is licensed under the MIT License.  
