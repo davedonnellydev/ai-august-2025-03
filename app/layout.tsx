@@ -5,8 +5,8 @@ import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/c
 import { theme } from '../theme';
 
 export const metadata = {
-  title: 'Project [00]',
-  description: 'An App built for AIAugust App a Day Challenge',
+  title: 'Recipe Finder',
+  description: 'A Recipe Finder App built for AIAugust App a Day Challenge',
 };
 
 export default function RootLayout({ children }: { children: any }) {

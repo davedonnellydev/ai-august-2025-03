@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Text, TextInput, Title } from '@mantine/core';
+import { Button, Code, Text, TextInput } from '@mantine/core';
 import { ClientRateLimiter } from '@/app/lib/utils/api-helpers';
-import classes from './Welcome.module.css';
+import { RecipeResults } from '../RecipeResults/RecipeResults';
+import classes from './RecipeSearch.module.css';
 
-export function Welcome() {
+export function RecipeSearch() {
   const [input, setInput] = useState('');
-  const [response, setResponse] = useState('');
+  const [response, setResponse] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [remainingRequests, setRemainingRequests] = useState(0);
@@ -51,10 +52,25 @@ export function Welcome() {
       }
 
       const result = await response.json();
-      setResponse(result.response);
+      console.log(result.response);
 
+        // Make the Spoonacular API call
+        const recipes = await fetch(`/api/proxy/spoonacular/complexSearch${result.response}`);
+
+        if (!recipes.ok) {
+        const errorData = await recipes.json();
+        console.log(errorData);
+        throw new Error(errorData.error || 'Spoonacular API call failed');
+        }
+
+        const recipeList = await recipes.json();
+
+        console.log("recipe list:")
+        console.log(recipeList);
+
+        setResponse(recipeList.results);
       // Update remaining requests after successful translation
-      setRemainingRequests(ClientRateLimiter.getRemainingRequests());
+    //   setRemainingRequests(ClientRateLimiter.getRemainingRequests());
     } catch (err) {
       console.error('API error:', err);
       setError(err instanceof Error ? err.message : 'API failed');
@@ -65,31 +81,24 @@ export function Welcome() {
 
   const handleReset = () => {
     setInput('');
-    setResponse('');
+    setResponse([]);
     setError('');
   };
 
   return (
     <>
-      <Title className={classes.title} ta="center" mt={100}>
-        Welcome to your{' '}
-        <Text inherit variant="gradient" component="span" gradient={{ from: 'pink', to: 'yellow' }}>
-          Starter
-        </Text>
-      </Title>
-
       <div style={{ maxWidth: 600, margin: '20px auto', padding: '20px' }}>
         <TextInput
           value={input}
           onChange={(event) => setInput(event.currentTarget.value)}
           size="md"
           radius="md"
-          label="Ask a Question"
-          placeholder="How big is the earth?"
+          label="Search for recipes"
+          placeholder="Find pasta recipes that use chicken and broccoli..."
         />
 
         <Button variant="filled" color="cyan" onClick={() => handleRequest()} loading={isLoading}>
-          Ask Question
+          Search
         </Button>
         <Button variant="light" color="cyan" onClick={() => handleReset()}>
           Reset
@@ -100,13 +109,11 @@ export function Welcome() {
             Error: {error}
           </Text>
         )}
-
-        {response && (
-          <Text c="dimmed" ta="center" size="lg" maw={580} mx="auto" mt="xl">
-            Answer: {response}
-          </Text>
-        )}
       </div>
+
+      {response && response.length > 0 && (
+        <RecipeResults recipes={response} />
+      )}
 
       <Text c="dimmed" ta="center" size="sm" maw={580} mx="auto" mt="xl">
         You have {remainingRequests} questions remaining.

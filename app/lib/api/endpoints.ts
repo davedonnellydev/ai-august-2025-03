@@ -28,3 +28,8 @@ export const api = {
   put: <T>(endpoint: string, data?: any) => apiClient.put<T>(endpoint, data),
   delete: <T>(endpoint: string) => apiClient.delete<T>(endpoint),
 };
+
+// Spoonacular API endpoint
+export const spoonacularAPI = {
+    get: (query: string) => apiClient.get(`spoonacular/complexSearch${query}`)
+  };
