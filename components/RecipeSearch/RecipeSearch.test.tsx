@@ -27,7 +27,7 @@ describe('RecipeSearch component', () => {
 
   it('displays remaining requests count', () => {
     render(<RecipeSearch />);
-    expect(screen.getByText(/You have \d+ questions remaining/)).toBeInTheDocument();
+    expect(screen.getByText(/You have \d+ recipe searches remaining/)).toBeInTheDocument();
   });
 
   it('allows user to type in input field', async () => {

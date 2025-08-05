@@ -113,7 +113,7 @@ export function RecipeSearch() {
       {response && response.length > 0 && <RecipeResults recipes={response} />}
 
       <Text c="dimmed" ta="center" size="sm" maw={580} mx="auto" mt="xl">
-        You have {remainingRequests} questions remaining.
+        You have {remainingRequests} recipe searches remaining.
       </Text>
     </>
   );
