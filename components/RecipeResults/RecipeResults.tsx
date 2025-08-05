@@ -1,6 +1,8 @@
 'use client';
 
-import { Card, Image, Text, Group, Badge } from '@mantine/core';
+import { Card, Image, Text, Group, Badge, ActionIcon, Tooltip } from '@mantine/core';
+import { IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
+import { useState, useEffect } from 'react';
 import classes from './RecipeResults.module.css';
 
 interface Recipe {
@@ -24,6 +26,58 @@ interface RecipeResultsProps {
 }
 
 export function RecipeResults({ recipes }: RecipeResultsProps) {
+  const [savedRecipes, setSavedRecipes] = useState<Recipe[]>([]);
+
+  // Load saved recipes from localStorage on component mount
+  useEffect(() => {
+    const saved = localStorage.getItem('savedRecipes');
+    if (saved) {
+      setSavedRecipes(JSON.parse(saved));
+    }
+  }, []);
+
+  // Listen for storage changes to sync across components
+  useEffect(() => {
+    const handleStorageChange = () => {
+      const saved = localStorage.getItem('savedRecipes');
+      if (saved) {
+        setSavedRecipes(JSON.parse(saved));
+      } else {
+        setSavedRecipes([]);
+      }
+    };
+
+    const handleSavedRecipesChanged = (event: CustomEvent) => {
+      setSavedRecipes(event.detail);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('savedRecipesChanged', handleSavedRecipesChanged as EventListener);
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('savedRecipesChanged', handleSavedRecipesChanged as EventListener);
+    };
+  }, []);
+
+  const isRecipeSaved = (recipeId: number) => {
+    return savedRecipes.some(recipe => recipe.id === recipeId);
+  };
+
+  const toggleSaveRecipe = (recipe: Recipe) => {
+    const newSavedRecipes = isRecipeSaved(recipe.id)
+      ? savedRecipes.filter(r => r.id !== recipe.id)
+      : [...savedRecipes, recipe];
+
+    setSavedRecipes(newSavedRecipes);
+    localStorage.setItem('savedRecipes', JSON.stringify(newSavedRecipes));
+
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('savedRecipesChanged', {
+      detail: newSavedRecipes
+    }));
+  };
+
   if (!recipes || recipes.length === 0) {
     return (
       <Text c="dimmed" ta="center" size="lg" maw={580} mx="auto" mt="xl">
@@ -53,13 +107,33 @@ export function RecipeResults({ recipes }: RecipeResultsProps) {
             style={{ textDecoration: 'none', color: 'inherit' }}
             className={classes.recipeCard}
           >
-            <Card.Section>
+            <Card.Section style={{ position: 'relative' }}>
               <Image
                 src={recipe.image}
                 height={160}
                 alt={recipe.title}
                 style={{ objectFit: 'cover' }}
               />
+              <Tooltip label={isRecipeSaved(recipe.id) ? "Remove from saved" : "Save recipe"}>
+                <ActionIcon
+                  variant="filled"
+                  color={isRecipeSaved(recipe.id) ? "yellow" : "gray"}
+                  size="lg"
+                  style={{
+                    position: 'absolute',
+                    top: 8,
+                    right: 8,
+                    zIndex: 10,
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    toggleSaveRecipe(recipe);
+                  }}
+                >
+                  {isRecipeSaved(recipe.id) ? <IconBookmarkFilled size={16} /> : <IconBookmark size={16} />}
+                </ActionIcon>
+              </Tooltip>
             </Card.Section>
 
             <Group justify="space-between" mt="md" mb="xs">
