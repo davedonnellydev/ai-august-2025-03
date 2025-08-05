@@ -14,8 +14,8 @@ const PROXY_CONFIGS: Record<string, ProxyConfig> = {
   },
   'spoonacular/complexSearch': {
     target: 'https://api.spoonacular.com/recipes/complexSearch',
-    timeout: 10000
-  }
+    timeout: 10000,
+  },
 };
 
 // Cache for responses
@@ -36,17 +36,17 @@ async function handleProxyRequest(
   try {
     // Build target URL
     const url = new URL(request.url);
-let targetUrl = config.target;
+    let targetUrl = config.target;
 
-// Special handling for Spoonacular API
-if (path === 'spoonacular/complexSearch') {
-  const apiKey = process.env.SPOONACULAR_API_KEY;
-  const searchParams = url.search ? url.search.substring(1) : '';
-  targetUrl = `${config.target}?apiKey=${apiKey}${searchParams ? `&${searchParams}` : ''}&instructionsRequired=true&addRecipeInformation=true&addRecipeInstructions=true&number=5`;
-} else {
-  const separator = config.target.includes('?') ? '&' : '?';
-  targetUrl = `${config.target}${separator}${url.search.substring(1)}`;
-}
+    // Special handling for Spoonacular API
+    if (path === 'spoonacular/complexSearch') {
+      const apiKey = process.env.SPOONACULAR_API_KEY;
+      const searchParams = url.search ? url.search.substring(1) : '';
+      targetUrl = `${config.target}?apiKey=${apiKey}${searchParams ? `&${searchParams}` : ''}&instructionsRequired=true&addRecipeInformation=true&addRecipeInstructions=true&number=5`;
+    } else {
+      const separator = config.target.includes('?') ? '&' : '?';
+      targetUrl = `${config.target}${separator}${url.search.substring(1)}`;
+    }
 
     // Prepare headers
     const headers = new Headers();

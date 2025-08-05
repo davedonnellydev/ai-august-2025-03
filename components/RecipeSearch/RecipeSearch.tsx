@@ -1,10 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, Code, Text, TextInput } from '@mantine/core';
+import { Button, Text, TextInput } from '@mantine/core';
 import { ClientRateLimiter } from '@/app/lib/utils/api-helpers';
 import { RecipeResults } from '../RecipeResults/RecipeResults';
-import classes from './RecipeSearch.module.css';
 
 export function RecipeSearch() {
   const [input, setInput] = useState('');
@@ -54,23 +53,23 @@ export function RecipeSearch() {
       const result = await response.json();
       console.log(result.response);
 
-        // Make the Spoonacular API call
-        const recipes = await fetch(`/api/proxy/spoonacular/complexSearch${result.response}`);
+      // Make the Spoonacular API call
+      const recipes = await fetch(`/api/proxy/spoonacular/complexSearch${result.response}`);
 
-        if (!recipes.ok) {
+      if (!recipes.ok) {
         const errorData = await recipes.json();
         console.log(errorData);
         throw new Error(errorData.error || 'Spoonacular API call failed');
-        }
+      }
 
-        const recipeList = await recipes.json();
+      const recipeList = await recipes.json();
 
-        console.log("recipe list:")
-        console.log(recipeList);
+      console.log('recipe list:');
+      console.log(recipeList);
 
-        setResponse(recipeList.results);
+      setResponse(recipeList.results);
       // Update remaining requests after successful translation
-    //   setRemainingRequests(ClientRateLimiter.getRemainingRequests());
+      //   setRemainingRequests(ClientRateLimiter.getRemainingRequests());
     } catch (err) {
       console.error('API error:', err);
       setError(err instanceof Error ? err.message : 'API failed');
@@ -111,9 +110,7 @@ export function RecipeSearch() {
         )}
       </div>
 
-      {response && response.length > 0 && (
-        <RecipeResults recipes={response} />
-      )}
+      {response && response.length > 0 && <RecipeResults recipes={response} />}
 
       <Text c="dimmed" ta="center" size="sm" maw={580} mx="auto" mt="xl">
         You have {remainingRequests} questions remaining.

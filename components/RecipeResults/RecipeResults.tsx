@@ -1,8 +1,8 @@
 'use client';
 
-import { Card, Image, Text, Group, Badge, ActionIcon, Tooltip } from '@mantine/core';
+import { useEffect, useState } from 'react';
 import { IconBookmark, IconBookmarkFilled } from '@tabler/icons-react';
-import { useState, useEffect } from 'react';
+import { ActionIcon, Badge, Card, Group, Image, Text, Tooltip } from '@mantine/core';
 import classes from './RecipeResults.module.css';
 
 interface Recipe {
@@ -30,19 +30,29 @@ export function RecipeResults({ recipes }: RecipeResultsProps) {
 
   // Load saved recipes from localStorage on component mount
   useEffect(() => {
-    const saved = localStorage.getItem('savedRecipes');
-    if (saved) {
-      setSavedRecipes(JSON.parse(saved));
+    try {
+      const saved = localStorage.getItem('savedRecipes');
+      if (saved) {
+        setSavedRecipes(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error('Error loading saved recipes:', error);
+      setSavedRecipes([]);
     }
   }, []);
 
   // Listen for storage changes to sync across components
   useEffect(() => {
     const handleStorageChange = () => {
-      const saved = localStorage.getItem('savedRecipes');
-      if (saved) {
-        setSavedRecipes(JSON.parse(saved));
-      } else {
+      try {
+        const saved = localStorage.getItem('savedRecipes');
+        if (saved) {
+          setSavedRecipes(JSON.parse(saved));
+        } else {
+          setSavedRecipes([]);
+        }
+      } catch (error) {
+        console.error('Error handling storage change:', error);
         setSavedRecipes([]);
       }
     };
@@ -61,21 +71,23 @@ export function RecipeResults({ recipes }: RecipeResultsProps) {
   }, []);
 
   const isRecipeSaved = (recipeId: number) => {
-    return savedRecipes.some(recipe => recipe.id === recipeId);
+    return savedRecipes.some((recipe) => recipe.id === recipeId);
   };
 
   const toggleSaveRecipe = (recipe: Recipe) => {
     const newSavedRecipes = isRecipeSaved(recipe.id)
-      ? savedRecipes.filter(r => r.id !== recipe.id)
+      ? savedRecipes.filter((r) => r.id !== recipe.id)
       : [...savedRecipes, recipe];
 
     setSavedRecipes(newSavedRecipes);
     localStorage.setItem('savedRecipes', JSON.stringify(newSavedRecipes));
 
     // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent('savedRecipesChanged', {
-      detail: newSavedRecipes
-    }));
+    window.dispatchEvent(
+      new CustomEvent('savedRecipesChanged', {
+        detail: newSavedRecipes,
+      })
+    );
   };
 
   if (!recipes || recipes.length === 0) {
@@ -92,7 +104,13 @@ export function RecipeResults({ recipes }: RecipeResultsProps) {
         Found {recipes.length} recipe{recipes.length !== 1 ? 's' : ''}
       </Text>
 
-      <div style={{ display: 'grid', gap: '20px', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+      <div
+        style={{
+          display: 'grid',
+          gap: '20px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+        }}
+      >
         {recipes.map((recipe) => (
           <Card
             key={recipe.id}
@@ -114,10 +132,10 @@ export function RecipeResults({ recipes }: RecipeResultsProps) {
                 alt={recipe.title}
                 style={{ objectFit: 'cover' }}
               />
-              <Tooltip label={isRecipeSaved(recipe.id) ? "Remove from saved" : "Save recipe"}>
+              <Tooltip label={isRecipeSaved(recipe.id) ? 'Remove from saved' : 'Save recipe'}>
                 <ActionIcon
                   variant="filled"
-                  color={isRecipeSaved(recipe.id) ? "yellow" : "gray"}
+                  color={isRecipeSaved(recipe.id) ? 'yellow' : 'gray'}
                   size="lg"
                   style={{
                     position: 'absolute',
@@ -131,7 +149,11 @@ export function RecipeResults({ recipes }: RecipeResultsProps) {
                     toggleSaveRecipe(recipe);
                   }}
                 >
-                  {isRecipeSaved(recipe.id) ? <IconBookmarkFilled size={16} /> : <IconBookmark size={16} />}
+                  {isRecipeSaved(recipe.id) ? (
+                    <IconBookmarkFilled size={16} />
+                  ) : (
+                    <IconBookmark size={16} />
+                  )}
                 </ActionIcon>
               </Tooltip>
             </Card.Section>

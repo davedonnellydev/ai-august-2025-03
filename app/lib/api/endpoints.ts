@@ -31,5 +31,5 @@ export const api = {
 
 // Spoonacular API endpoint
 export const spoonacularAPI = {
-    get: (query: string) => apiClient.get(`spoonacular/complexSearch${query}`)
-  };
+  get: (query: string) => apiClient.get(`spoonacular/complexSearch${query}`),
+};

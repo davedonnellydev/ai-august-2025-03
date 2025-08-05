@@ -1,8 +1,20 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Card, Image, Text, Group, Badge, ActionIcon, Button, Stack, Title, ScrollArea, Tooltip } from '@mantine/core';
-import { IconTrash, IconBookmarkFilled, IconExternalLink } from '@tabler/icons-react';
+import { useEffect, useState } from 'react';
+import { IconBookmarkFilled, IconExternalLink, IconTrash } from '@tabler/icons-react';
+import {
+  ActionIcon,
+  Badge,
+  Button,
+  Card,
+  Group,
+  Image,
+  ScrollArea,
+  Stack,
+  Text,
+  Title,
+  Tooltip,
+} from '@mantine/core';
 import classes from './SavedRecipes.module.css';
 
 interface Recipe {
@@ -26,19 +38,29 @@ export function SavedRecipes() {
 
   // Load saved recipes from localStorage on component mount
   useEffect(() => {
-    const saved = localStorage.getItem('savedRecipes');
-    if (saved) {
-      setSavedRecipes(JSON.parse(saved));
+    try {
+      const saved = localStorage.getItem('savedRecipes');
+      if (saved) {
+        setSavedRecipes(JSON.parse(saved));
+      }
+    } catch (error) {
+      console.error('Error loading saved recipes:', error);
+      setSavedRecipes([]);
     }
   }, []);
 
   // Listen for storage changes to sync across components
   useEffect(() => {
     const handleStorageChange = () => {
-      const saved = localStorage.getItem('savedRecipes');
-      if (saved) {
-        setSavedRecipes(JSON.parse(saved));
-      } else {
+      try {
+        const saved = localStorage.getItem('savedRecipes');
+        if (saved) {
+          setSavedRecipes(JSON.parse(saved));
+        } else {
+          setSavedRecipes([]);
+        }
+      } catch (error) {
+        console.error('Error handling storage change:', error);
         setSavedRecipes([]);
       }
     };
@@ -57,14 +79,16 @@ export function SavedRecipes() {
   }, []);
 
   const removeRecipe = (recipeId: number) => {
-    const newSavedRecipes = savedRecipes.filter(recipe => recipe.id !== recipeId);
+    const newSavedRecipes = savedRecipes.filter((recipe) => recipe.id !== recipeId);
     setSavedRecipes(newSavedRecipes);
     localStorage.setItem('savedRecipes', JSON.stringify(newSavedRecipes));
 
     // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent('savedRecipesChanged', {
-      detail: newSavedRecipes
-    }));
+    window.dispatchEvent(
+      new CustomEvent('savedRecipesChanged', {
+        detail: newSavedRecipes,
+      })
+    );
   };
 
   const clearAllRecipes = () => {
@@ -72,9 +96,11 @@ export function SavedRecipes() {
     localStorage.removeItem('savedRecipes');
 
     // Dispatch custom event to notify other components
-    window.dispatchEvent(new CustomEvent('savedRecipesChanged', {
-      detail: []
-    }));
+    window.dispatchEvent(
+      new CustomEvent('savedRecipesChanged', {
+        detail: [],
+      })
+    );
   };
 
   return (
@@ -86,12 +112,7 @@ export function SavedRecipes() {
             Saved Recipes
           </Title>
           {savedRecipes.length > 0 && (
-            <Button
-              variant="subtle"
-              color="red"
-              size="xs"
-              onClick={clearAllRecipes}
-            >
+            <Button variant="subtle" color="red" size="xs" onClick={clearAllRecipes}>
               Clear All
             </Button>
           )}

@@ -1,11 +1,13 @@
-"use client";
-import { RecipeSearch } from '../components/RecipeSearch/RecipeSearch';
-import { SavedRecipes } from '@/components/SavedRecipes/SavedRecipes';
-import { AppShell, Burger, Text, Title } from '@mantine/core';
+'use client';
+
+import { AppShell, Burger, Title } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { SavedRecipes } from '@/components/SavedRecipes/SavedRecipes';
+import { RecipeSearch } from '../components/RecipeSearch/RecipeSearch';
+import classes from './page.module.css';
 
 export default function HomePage() {
-    const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle }] = useDisclosure();
   return (
     <AppShell
       padding="md"
@@ -17,14 +19,11 @@ export default function HomePage() {
       }}
     >
       <AppShell.Header>
-        <Burger
-          opened={opened}
-          onClick={toggle}
-          hiddenFrom="sm"
-          size="sm"
-        />
+        <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
 
-        <Title order={1}>Recipe Finder</Title>
+        <Title className={classes.title} order={1}>
+          Recipe Finder
+        </Title>
       </AppShell.Header>
 
       <AppShell.Navbar>
